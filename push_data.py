@@ -16,7 +16,16 @@ class DataExtraction:
     def __init__(self):
         pass
 
-    def csv_to_json(self,df):
+    def csv_to_json(self,df) ->pd.DataFrame:
+        """
+        This fucntion will aims to conver the csv data into json object
+
+        Parameters:
+        df: pandas DataFrame
+
+        Return:
+        json_obj: It will return json object
+        """
         try:
             json_str = df.to_json(orient='records')
             json_obj = json.loads(json_str)
@@ -27,7 +36,15 @@ class DataExtraction:
             raise CustomeException(e,sys)
         
     def insert_data_mangodb(self,records,database,collection):
+        """
+        This function aims to push the json object into mongodb database
 
+        Parameters:
+        records(json_obj): json objects that need to be inserted into database
+        database (str): Name of the database where the data is to be inserted
+        collection (str): Name of the collection where the data need to be inserted
+        
+        """
         try:
 
             mongo_client = pymongo.MongoClient(MONGO_DB_URL)
