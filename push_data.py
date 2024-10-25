@@ -12,7 +12,13 @@ load_dotenv()
 MONGO_DB_URL = os.getenv("MONGO_DB_URL")
 
 class DataExtraction:
+    """
+    A class for extracting data from various sources and processing it.
 
+    This class provides methods to convert CSV data to JSON format 
+    and to insert the JSON data into a MongoDB database.
+
+    """
     def __init__(self):
         pass
 
