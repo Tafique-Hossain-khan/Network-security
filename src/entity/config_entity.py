@@ -37,3 +37,10 @@ class DataTransformationConfig:
         self.transformed_train_file_path = os.path.join(training_pipeline_config.artifact_dir,"data_transformation","transformed_data","train.npy")
         self.transformed_test_file_path = os.path.join(training_pipeline_config.artifact_dir,"data_transformation","transformed_data","test.npy")
         self.transformed_object_file_path =  os.path.join(training_pipeline_config.artifact_dir,"data_transformation","transformed_object","preprocessor.pkl")
+
+
+class ModelTrainerConfig:
+    def __init__(self,training_pipeline_config:TrainingPipelineConfig):
+        self.final_model_file_path = os.path.join(training_pipeline_config.artifact_dir,"model_trainer","trained_model","model.pkl")
+
+        

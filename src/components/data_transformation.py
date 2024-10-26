@@ -8,7 +8,7 @@ from sklearn.impute import KNNImputer
 from sklearn.pipeline import Pipeline
 import sys
 from src.utils.main_utlis.utils import save_numpy_array_data,save_object
-from src.entity.artifact_entity import DataValidationArtifact
+from src.entity.artifact_entity import DataValidationArtifact,DataTransformationArtifact
 from src.entity.config_entity import DataTransformationConfig
 
 
@@ -84,8 +84,16 @@ class DataTransformation:
 
             save_object( "final_model/preprocessor.pkl", preprocessor_object,)
 
+            data_transformation_artifact=DataTransformationArtifact(
+                transformed_object_file_path=self.data_transformation_config.transformed_object_file_path,
+                transformed_train_file_path=self.data_transformation_config.transformed_train_file_path,
+                transformed_test_file_path=self.data_transformation_config.transformed_test_file_path
+            )
+            return data_transformation_artifact
 
-           
+
+
+        
 
 
             
