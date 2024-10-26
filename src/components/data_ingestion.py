@@ -62,8 +62,5 @@ class DataIngestion:
         except Exception as e:
             raise CustomeException(e,sys)
 
-if __name__ == "__main__":
-    obj = DataIngestion()
-    df = obj.get_data_from_db("TAFIQUE","NetworkData")
-    X_train,X_test,y_train,y_test = obj.split_data_into_train_test(df,test_size=0.2)
+
     
