@@ -1,0 +1,15 @@
+pandas
+numpy
+matplotlib
+seaborn
+
+pymongo[srv]==3.6
+pymongo==4.10.1
+python-dotenv
+certifi
+scikit-learn
+dvc
+dagshub
+dvc-s3
+
+scipy
