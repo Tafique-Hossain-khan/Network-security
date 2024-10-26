@@ -7,10 +7,10 @@ Data validation         ✅
 
 Data Transformation     ✅
 
-Model Training
+Model Training ✅
 
-Model Evaluation
+Model Evaluation ✅
 
-Hyperparameter tuining
+Hyperparameter tuining ✅
 
-Mdole Experiment tracking 
+Mdole Experiment tracking ✅
