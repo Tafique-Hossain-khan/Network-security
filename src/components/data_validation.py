@@ -112,7 +112,3 @@ class DataValidation:
         except Exception as e:
             raise CustomeException(e,sys)
 
-
-if __name__ == "__main__":
-    obj = DataValidation()
-    obj.initiate_data_validation()
