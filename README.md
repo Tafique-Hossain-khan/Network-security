@@ -5,7 +5,7 @@ Data ingestion          ✅
 
 Data validation         ✅
 
-Data Transformation
+Data Transformation     ✅
 
 Model Training
 

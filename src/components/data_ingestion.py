@@ -10,21 +10,26 @@ from typing import List
 from sklearn.model_selection import train_test_split
 from dotenv import load_dotenv
 load_dotenv()
+from src.entity.config_entity import DataIngestionConfig
+from src.entity.artifact_entity import DataIngestionArtifact
 
 MONGO_DB_URL=os.getenv("MONGO_DB_URL")
-@dataclass
-class DataIngestionConfig:
-    
-    raw_data_path:str = os.path.join("Data/ingested_data","raw_data.csv")
-    train_data_path:str = os.path.join("Data/ingested_data","train_data.csv")
-    test_data_path:str = os.path.join("Data/ingested_data","test_data.csv")
 
-    
 class DataIngestion:
-    def __init__(self):
-        pass
+    def __init__(self,data_ingestion_config_obj:DataIngestionConfig):
+        self.data_ingestion_config_obj = data_ingestion_config_obj
 
     def get_data_from_db(self,db_name,collection_name):
+        """
+        This function amis to get the data from mongdb
+
+        Parameters:
+        db_name:Name of the database
+        collection_name : Name of the collection where the data is stored
+
+        Return:
+        pd.Dataframe
+        """
         try:
             MONGO_DB_URL = os.getenv("MONGO_DB_URL")
             client = pymongo.MongoClient(MONGO_DB_URL)
@@ -35,8 +40,9 @@ class DataIngestion:
                 df=df.drop(columns=["_id"],axis=1)
             
             df.replace({"na":np.nan},inplace=True)
-            os.makedirs(os.path.dirname(DataIngestionConfig.raw_data_path),exist_ok=True)
-            df.to_csv(DataIngestionConfig.raw_data_path)
+            os.makedirs(os.path.dirname(self.data_ingestion_config_obj.raw_data_path),exist_ok=True)
+            df.to_csv(self.data_ingestion_config_obj.raw_data_path)
+            
             return df
         except Exception as e:
             raise CustomeException(e,sys)
@@ -44,23 +50,34 @@ class DataIngestion:
     def split_data_into_train_test(self,raw_data,test_size):
         try:
             logging.info("spliting the data into train and test")
-            X = raw_data.drop(columns=['Result'])
-            y = raw_data['Result']
-            X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=test_size,random_state=42)
-            logging.info(X_train.shape)
-            logging.info(X_test.shape)
+    
+            train_arr, test_arr = train_test_split(raw_data, test_size=test_size, random_state=42)
 
-            os.makedirs(os.path.dirname(DataIngestionConfig.train_data_path),exist_ok=True)
-            X_train.to_csv(DataIngestionConfig.train_data_path)
+            logging.info(train_arr.shape)
+            logging.info(test_arr.shape)
 
-            os.makedirs(os.path.dirname(DataIngestionConfig.test_data_path),exist_ok=True)
-            X_test.to_csv(DataIngestionConfig.test_data_path)
+            os.makedirs(os.path.dirname(self.data_ingestion_config_obj.train_data_path),exist_ok=True)
+            train_arr.to_csv(self.data_ingestion_config_obj.train_data_path)
+
+            os.makedirs(os.path.dirname(self.data_ingestion_config_obj.test_data_path),exist_ok=True)
+            test_arr.to_csv(self.data_ingestion_config_obj.test_data_path)
 
             logging.info("Data spliting complited and saved to the respective location")
 
-            return X_train,X_test,y_train,y_test
+            return train_arr,test_arr
         except Exception as e:
             raise CustomeException(e,sys)
 
+    def initiate_data_ingestion(self):
+        try:
+            
+            dataframe=self.get_data_from_db("TAFIQUE","NetworkData")
+            self.split_data_into_train_test(dataframe,test_size=0.2)
+            dataingestionartifact=DataIngestionArtifact(trained_file_path=self.data_ingestion_config_obj.train_data_path,
+                                                        test_file_path=self.data_ingestion_config_obj.test_data_path)
+            return dataingestionartifact
+
+        except Exception as e:
+            raise CustomeException(e,sys)
 
     
