@@ -16,7 +16,7 @@ class TrainingPipelineConfig:
         self.timestamp: str=timestamp
 
 class DataIngestionConfig:
-    def __init__(self):
+    def __init__(self,training_pipeline_config:TrainingPipelineConfig):
         self.raw_data_path:str = os.path.join("Data/ingested_data","raw_data.csv")
         self.train_data_path:str = os.path.join("Data/ingested_data","train_data.csv")
         self.test_data_path:str = os.path.join("Data/ingested_data","test_data.csv")

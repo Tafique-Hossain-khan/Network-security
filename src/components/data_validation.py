@@ -7,15 +7,16 @@ import pandas as pd
 from src.entity.config_entity import TrainingPipelineConfig,DataValidationConfig
 from src.entity.artifact_entity import DataValidationArtifact
 from src.utils.main_utlis.utils import read_yaml
-
+from src.entity.artifact_entity import DataIngestionArtifact
 
 
 class DataValidation:
 
-    def __init__(self,data_validation_config:DataValidationConfig):
+    def __init__(self,data_ingestion_artifact:DataIngestionArtifact,data_validation_config:DataValidationConfig):
         
         try:
             self.data_validation_config=data_validation_config
+            self.data_ingestion_artifact = data_ingestion_artifact
         except Exception as e:
             raise CustomeException(e,sys)
         
@@ -95,8 +96,10 @@ class DataValidation:
     def initiate_data_validation(self):
         try:
             df = pd.read_csv("Data\phisingData.csv")
-            train_dataframe = pd.read_csv("Data\ingested_data\\train_data.csv")
-            test_dataframe = pd.read_csv("Data\ingested_data\\test_data.csv")
+            train_dataframe = pd.read_csv(self.data_ingestion_artifact.trained_file_path)
+            test_dataframe = pd.read_csv(self.data_ingestion_artifact.test_file_path)
+            #train_dataframe = pd.read_csv("Data\ingested_data\\train_data.csv")
+            #test_dataframe = pd.read_csv("Data\ingested_data\\test_data.csv")
             yaml_file_path = 'Data_schema\schema.yaml'
             columns_status_values = []
             status=self.validate_number_of_columns(dataframe=train_dataframe,yaml_file_path=yaml_file_path)
@@ -115,7 +118,7 @@ class DataValidation:
             #Based on the status we can save the incomming data
             drift_report_content = read_yaml(self.data_validation_config.drift_report_file_path)
             #with open(self.data_validation_config.drift_report_file_path ,'r') as file:
-             #   y = yaml.safe_load(file)
+            #   y = yaml.safe_load(file)
             drift_report = []
             for flag in drift_report_content.values():
                 drift_report.append(list(flag.values())[0])
